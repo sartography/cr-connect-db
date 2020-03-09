@@ -1,5 +1,5 @@
 FROM postgres
-COPY ./initdb.sh:/docker-entrypoint-initdb.d/initdb.sh
+COPY ./initdb.sh /docker-entrypoint-initdb.d/initdb.sh
 EXPOSE 5432
 VOLUME ["/var/lib/postgresql/data"]
 ENV POSTGRES_USER=$POSTGRES_USER
