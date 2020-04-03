@@ -12,7 +12,7 @@ before_install:
 install:
   docker build --no-cache -t sartography/cr-connect-db:latest . || exit 1;
   docker push sartography/cr-connect-db:latest || exit 1;
-  aws sqs send-message --queue-url 'https://queue.amazonaws.com/474683445819/dcos-refresh' --message-body 'crconnect/db' || exit 1;
+  aws sqs send-message --region 'us-east-1' --queue-url 'https://queue.amazonaws.com/474683445819/dcos-refresh' --message-body 'crconnect/db' || exit 1;
 
 notifications:
   email:
