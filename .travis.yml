@@ -7,7 +7,7 @@ before_install:
   - sudo pip install --upgrade pip
   - pip install --user awscli
   - export PATH=$PATH:$HOME/.local/bin
-  - echo $DOCKER_PASSWORD | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - echo $DOCKER_TOKEN | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 install:
   docker build --no-cache -t sartography/cr-connect-db:latest . || exit 1;
