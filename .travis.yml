@@ -17,6 +17,9 @@ install:
   - export REPO=sartography/cr-connect-db
   - export TAG=`if [$TRAVIS_BRANCH == "master"]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
   - docker build --build-arg GIT_COMMIT="$REPO:$COMMIT" -f Dockerfile -t $REPO:$COMMIT .
+  - echo "REPO:TAG = $REPO:$TAG"
+  - echo "$REPO:$COMMIT = $REPO:$TAG"
+  - echo "$REPO:travis-$TRAVIS_BUILD_NUMBER"
   - docker tag $REPO:$COMMIT $REPO:$TAG
   - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
   - docker push $REPO
