@@ -7,23 +7,18 @@ env:
   global:
     - COMMIT=${TRAVIS_COMMIT::8}
 
-before_install:
-  - sudo pip install --upgrade pip
-  - pip install --user awscli
-  - export PATH=$PATH:$HOME/.local/bin
-  - echo $DOCKER_TOKEN | docker login -u "$DOCKER_USERNAME" --password-stdin
-
 install:
-  - export REPO=sartography/cr-connect-db
-  - export TAG=`if [$TRAVIS_BRANCH == "master"]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
-  - docker build --build-arg GIT_COMMIT="$REPO:$COMMIT" -f Dockerfile -t $REPO:$COMMIT .
-  - echo "REPO:TAG = $REPO:$TAG"
-  - echo "$REPO:$COMMIT = $REPO:$TAG"
-  - echo "$REPO:travis-$TRAVIS_BUILD_NUMBER"
-  - docker tag $REPO:$COMMIT $REPO:$TAG
-  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
-  - docker push $REPO
-  - aws sqs send-message --region '$AWS_DEFAULT_REGION' --queue-url '$AWS_SQS_URL' --message-body 'crconnect/$TRAVIS_BRANCH/db'
+  - pip install pipenv pytest coverage awscli
+  - export PATH=$PATH:$HOME/.local/bin;
+  - pipenv install
+
+deploy:
+  provider: script
+  script: bash deploy.sh
+  skip_cleanup: true
+  on:
+    all_branches: true
+    condition: $TRAVIS_BRANCH =~ ^(testing|staging|master)$
 
 notifications:
   email:
