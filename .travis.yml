@@ -8,9 +8,9 @@ env:
     - COMMIT=${TRAVIS_COMMIT::8}
 
 install:
-  - pip install pipenv pytest coverage awscli
-  - export PATH=$PATH:$HOME/.local/bin;
-  - pipenv install
+  - sudo pip install --upgrade pip
+  - pip install --user awscli
+  - export PATH=$PATH:$HOME/.local/bin
 
 deploy:
   provider: script
