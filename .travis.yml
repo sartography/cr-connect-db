@@ -3,6 +3,10 @@ language: bash
 services:
   - docker
 
+env:
+  global:
+    - COMMIT=${TRAVIS_COMMIT::8}
+
 before_install:
   - sudo pip install --upgrade pip
   - pip install --user awscli
@@ -10,9 +14,13 @@ before_install:
   - echo $DOCKER_TOKEN | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 install:
-  docker build --no-cache -t sartography/cr-connect-db:latest . || exit 1;
-  docker push sartography/cr-connect-db:latest || exit 1;
-  aws sqs send-message --region 'us-east-1' --queue-url 'https://queue.amazonaws.com/474683445819/dcos-refresh' --message-body 'crconnect/db' || exit 1;
+  - export REPO=sartography/cr-connect-db
+  - export TAG=`if ["$TRAVIS_BRANCH == "master"]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+  - docker build --build-arg $GIT_COMMIT="$REPO:$COMMIT" -f Dockerfile -t $REPO:$COMMIT .
+  - docker tag $REPO:$COMMIT $REPO:$TAG
+  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+  - docker push $REPO
+  - aws sqs send-message --region '$AWS_DEFAULT_REGION' --queue-url '$AWS_SQS_URL' --message-body 'crconnect/$TRAVIS_BRANCH/db'
 
 notifications:
   email:
