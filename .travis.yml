@@ -3,16 +3,22 @@ language: bash
 services:
   - docker
 
-before_install:
+env:
+  global:
+    - COMMIT=${TRAVIS_COMMIT::8}
+
+install:
   - sudo pip install --upgrade pip
   - pip install --user awscli
   - export PATH=$PATH:$HOME/.local/bin
-  - echo $DOCKER_TOKEN | docker login -u "$DOCKER_USERNAME" --password-stdin
 
-install:
-  docker build --no-cache -t sartography/cr-connect-db:latest . || exit 1;
-  docker push sartography/cr-connect-db:latest || exit 1;
-  aws sqs send-message --region 'us-east-1' --queue-url 'https://queue.amazonaws.com/474683445819/dcos-refresh' --message-body 'crconnect/db' || exit 1;
+deploy:
+  provider: script
+  script: bash deploy.sh
+  skip_cleanup: true
+  on:
+    all_branches: true
+    condition: $TRAVIS_BRANCH =~ ^(testing|staging|master)$
 
 notifications:
   email:
