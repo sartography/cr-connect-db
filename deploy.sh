@@ -7,7 +7,7 @@ REPO="sartography/cr-connect-$APP"
 TAG=$(if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo "$TRAVIS_BRANCH" ; fi)
 COMMIT=${TRAVIS_COMMIT::8}
 
-docker build -f Dockerfile -t "$REPO:$COMMIT" --build-arg GIT_COMMIT="$REPO:$COMMIT" . || exit 1
+docker build -f Dockerfile -t "$REPO:$COMMIT" . || exit 1
 docker tag "$REPO:$COMMIT" "$REPO:$TAG" || exit 1
 docker tag "$REPO:$COMMIT" "$REPO:travis-$TRAVIS_BUILD_NUMBER" || exit 1
 docker push "$REPO" || exit 1
