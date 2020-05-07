@@ -3,10 +3,6 @@ language: bash
 services:
   - docker
 
-env:
-  global:
-    - COMMIT=${TRAVIS_COMMIT::8}
-
 install:
   - sudo pip install --upgrade pip
   - pip install --user awscli
