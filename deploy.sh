@@ -5,7 +5,7 @@ echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USERNAME" --password-stdin
 APP="db"
 REPO="sartography/cr-connect-$APP"
 TAG=$(if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo "$TRAVIS_BRANCH" ; fi)
-COMMIT=${$TRAVIS_COMMIT::8}
+COMMIT=${TRAVIS_COMMIT::8}
 
 echo "APP = $APP"
 echo "REPO = $REPO"
