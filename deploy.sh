@@ -13,12 +13,12 @@ function branch_to_deploy_stage () {
 }
 
 REPO="sartography/cr-connect-db"
+TAG=$(branch_to_tag "$TRAVIS_BRANCH")
+COMMIT=${TRAVIS_COMMIT::8}
+
 DEPLOY_APP="db"
 DEPLOY_GROUP=$(branch_to_deploy_group "$TRAVIS_BRANCH")
 DEPLOY_STAGE=$(branch_to_deploy_stage "$TRAVIS_BRANCH")
-DEPLOY_PATH="$DEPLOY_GROUP/$DEPLOY_STAGE/$DEPLOY_APP"
-TAG=$(branch_to_tag "$TRAVIS_BRANCH")
-COMMIT=${TRAVIS_COMMIT::8}
 
 if [ "$DEPLOY_GROUP" == "rrt" ]; then
   IFS='/' read -ra ARR <<< "$TRAVIS_BRANCH"  # Split branch on '/' character
@@ -26,6 +26,7 @@ if [ "$DEPLOY_GROUP" == "rrt" ]; then
   DEPLOY_STAGE=$(branch_to_deploy_stage "${ARR[1]}")
 fi
 
+DEPLOY_PATH="$DEPLOY_GROUP/$DEPLOY_STAGE/$DEPLOY_APP"
 echo "REPO = $REPO"
 echo "TAG = $TAG"
 echo "COMMIT = $COMMIT"
