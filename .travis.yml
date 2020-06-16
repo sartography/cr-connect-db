@@ -4,17 +4,7 @@ services:
   - docker
 
 install:
-  - sudo pip install --upgrade pip
-  - pip install --user awscli
-  - export PATH=$PATH:$HOME/.local/bin
-
-deploy:
-  provider: script
-  script: bash deploy.sh
-  skip_cleanup: true
-  on:
-    all_branches: true
-    condition: $TRAVIS_BRANCH =~ ^(dev|testing|demo|training|staging|master|rrt\/.*)$
+  - bash deploy.sh sartography/cr-connect-db
 
 notifications:
   email:
