@@ -3,7 +3,9 @@ language: bash
 services:
   - docker
 
-install:
+install: skip
+
+script:
   - bash deploy.sh sartography/cr-connect-db
 
 notifications:
@@ -12,4 +14,3 @@ notifications:
     on_failure: always
     recipients:
       - dan@sartography.com
-
